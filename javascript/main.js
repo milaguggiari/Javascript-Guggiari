@@ -1,141 +1,165 @@
-function activarPedido () {
+const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-    function producto (titulo, precio, descripcion) {
-        this.titulo = titulo;
-        this.precio = precio;
-        this.descripcion = descripcion;
+const productos = [
+    {
+        id:"budin-limón",
+        titulo: "Budin de limón",
+        precio: 6000,
+        img: "./assets/budinlimon.jpg",
+    },
+    {
+        id:"budin-marmolado",
+        titulo: "Budin marmolado",
+        precio: 6000,
+        img: "./assets/budinmarmolado.jpg",
+    },
+    {
+        id:"carrotcake",
+        titulo: "Carrotcake",
+        precio: 30000,
+        img: "./assets/carrotcake.jpg",
+    },
+    {
+        id:"selvanegra",
+        titulo: "Selva negra",
+        precio: 30000,
+        img: "./assets/selvanegra.jpg",
+    },
+    {
+        id:"crumble",
+        titulo: "Crumble de manzanas",
+        precio: 20000,
+        img: "./assets/crumble.jpg",
+    },
+    {
+        id:"lemonPie",
+        titulo: "Lemon pie",
+        precio: 20000,
+        img: "./assets/lemonpie.jpg",
+    },{
+        id:"lunettes",
+        titulo: "Galletas lunettes",
+        precio: 8000,
+        img: "./assets/lunettes.jpg",
+    },
+    {
+        id:"cookies",
+        titulo: "Galletas con chips",
+        precio: 8000,
+        img: "./assets/galletachips.jpg",
+    },
+];
+
+const contenedorProductos = document.querySelector("#productos");
+const carritoVacio = document.querySelector("#carrito-vacio");
+const carritoProductos = document.querySelector("#carrito-productos");
+const carritoTotal = document.querySelector("#carrito-total");
+const vaciarCarrito = document.querySelector("#vaciar-carrito");
+
+productos.forEach ((producto) => {
+    let div = document.createElement("div");
+    div.classList.add("producto");
+    div.innerHTML = `
+        <img class="producto-img" src="${producto.img}" alt="">
+        <h3>${producto.titulo}</h3>
+        <p>$${producto.precio}</p>
+    `;
+
+    let button = document.createElement("button");
+    button.classList.add("producto-btn");
+    button.innerText = "Agregar al carrito";
+    button.addEventListener("click", () => {
+        agregarAlCarrito(producto);
+    })
+
+    div.append(button);
+    contenedorProductos.append(div);
+});
+
+const agregarAlCarrito = (producto) => {
+    let productoEnCarrito = carrito.find((item) => item.id === producto.id);
+    
+    if (productoEnCarrito) {
+        productoEnCarrito.cantidad++;
+    } else {
+        carrito.push ({...producto, cantidad: 1});
     }
-
-    let listaPedidos =[];
-
-    function tomarPedidos () {       
-        let entrada = {
-            nombre: prompt("Ingresá tu nombre"),
-            direccion: prompt("Ingresá dirección de entrega"),
-            };
-        console.log (entrada);
-        alert("Muchas gracias por elegir, pronto enviaremos tu pedido");
-        return;
-    } 
-
-    function pedir (pedido) {
-        let mensaje = "";
-        switch (pedido) {
-            case "1":
-                let gustosT;
-                do { 
-                    gustosT = prompt(`Elija un sabor:
-                    1.Chocolate
-                    2.Vainilla y coco
-                    `);
-                    if (gustosT === "1") {
-                        const producto1 = new producto ("Torta de chocolate", 5000, "Húmedo bizcocho de chocolate. Se vende por unidad");
-                        console.log (producto1);
-                        listaPedidos.push (producto1);
-                        mensaje = "Tu pedido es: Torta de chocolate";
-                        
-                    } else if (gustosT === "2") {
-                        const producto2 = new producto ("Torta de vainilla", 5000, "Esponjosa torta de vainilla. Se vende por unidad");
-                        console.log (producto2);
-                        listaPedidos.push (producto2);
-                        mensaje = "Tu pedido es: Torta de vainilla";
-
-                    } else {
-                        alert ("Elección inválida"); 
-                    }                   
-                } while (gustosT !== "1" && gustosT !== "2");
-                        break;
-
-            case "2":
-                let gustosG;
-                do {
-                    gustosG = prompt(`Elija un sabor:
-                    1.Limón
-                    2.Pepas
-                    `); 
-                    if (gustosG === "1") {
-                        const producto3 = new producto ("Galleta de limón", 5000, "Suave galleta de limón. Se vende por unidad");
-                        console.log (producto3);
-                        listaPedidos.push (producto3);
-                        mensaje = "Tu pedido es: Galleta de limón";
-
-                    } else if (gustosG === "2") {
-                        const producto4 = new producto ("Pepas", 5000, "Masa fina rellena con dulce de membrillo. Se vende por unidad");
-                        console.log (producto4);
-                        listaPedidos.push (producto4);
-                        mensaje = "Tu pedido es: Pepas";
-
-                    } else {
-                        alert ("Elección inválida")
-                    } 
-                } while (gustosG !== "1" && gustosG !== "2");
-                    break;
-                
-            case "3":
-                let gustosP;
-                do {
-                    gustosP = prompt(`Elija un sabor:
-                    1.Tiramisú
-                    2.Flan
-                    `);
-                    if (gustosP === "1") {
-                        const producto5 = new producto ("Tiramisú", 5000, "Cremoso postre elaborado con materias primas de excelente calidad. Se vende por unidad");
-                        console.log (producto5);
-                        listaPedidos.push (producto5);
-                        mensaje = "Tu pedido es: Tiramisú";
-
-                    } else if (gustosP === "2") {
-                        const producto6 = new producto ("Flan", 5000, "Dulce y artesanal postre. Se vende por unidad");
-                        console.log (producto6);
-                        listaPedidos.push (producto6);
-                        mensaje = "Tu pedido es: Flan";
-                        
-                    } else {
-                        alert ("Elección inválida")
-                    }
-                } while (gustosP !== "1" && gustosP !== "2");
-                    break;
-
-            default:
-                alert ("Operación inválida")
-        }
-    }
-
-    function volverApedir() {
-        let volver;
-        do {
-            volver = prompt ("¿Querés volver a pedir? (si/no)");
-        if (volver.toLowerCase() === "si") {
-                activarPedido(pedido);
-            } else if ( listaPedidos.length > 0) {
-                tomarPedidos();
-                return;
-            } else {
-                alert ("Muchas gracias por su respuesta");
-                return;
-            }
-        } while (volver.toLowerCase() === "no");
-    }
-
-    let pedido;
-
-    do {
-        pedido = prompt(`
-            ¿Querés hacer un pedido? (si/no)
-        `);
-        if (pedido.toLowerCase() === "si") {
-            let seleccion = prompt (`
-                Seleccione una opción:
-                1.Tortas
-                2.Galletas
-                3.Postres
-                `);
-            pedir(seleccion);
-            } else {
-                alert ("Gracias por su respuesta");
-            }
-        } while(pedido.toLowerCase() !== "no" && volverApedir());
-        
+    actualizarCarrito();
 }
 
-activarPedido(); 
+function actualizarCarrito() {
+    if (carrito.length === 0) {
+        carritoVacio.classList.remove("d-none");
+        carritoProductos.classList.add("d-none");
+        vaciarCarrito.classList.add("d-none");
+    } else {
+        carritoVacio.classList.add("d-none");
+        carritoProductos.classList.remove("d-none");
+        vaciarCarrito.classList.remove("d-none");
+
+        carritoProductos.innerHTML = "";
+        carrito.forEach((producto) => {
+            let div = document.createElement("div");
+            div.classList.add("carrito-producto");
+            div.innerHTML = `
+                <h3>${producto.titulo}</h3>
+                <p>$${producto.precio}</p>
+                <select class="form-select" aria-label="Default select example">
+                </select>
+                <p class="total">$${producto.cantidad * producto.precio}</p>
+            `;
+
+            let select = div.querySelector("select");
+            let totalP = div.querySelector(".total");
+
+            for (let i=1; i<=10; i++) {
+                let option = document.createElement("option");
+                option.value = i;
+                option.textContent = i;
+                select.appendChild(option);
+            }
+
+            select.value = producto.cantidad;
+
+            select.addEventListener("change", () => {
+                const cantidad = parseInt(select.value, 10);
+                producto.cantidad = cantidad;
+                totalP.innerText = cantidad * producto.precio;
+                actualizarTotalCarrito();
+                localStorage.setItem("carrito", JSON.stringify(carrito));
+            });
+
+            let button = document.createElement("button");
+            button.classList.add("carrito-producto-btn");
+            button.innerText = "❌";
+            button.addEventListener("click", () => {
+                borrarDelCarrito(producto);
+            });
+
+            div.append(button);
+            carritoProductos.append(div);
+        });
+    }
+    actualizarTotalCarrito();
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+}
+
+function borrarDelCarrito(producto) {
+    const indice = carrito.findIndex((item) => item.id === producto.id);
+    carrito.splice(indice, 1);
+    actualizarCarrito();
+}
+
+function actualizarTotalCarrito() {
+    const totalGeneral = carrito.reduce((total, producto) => {
+        return total + (producto.cantidad * producto.precio);
+    }, 0);
+
+    carritoTotal.innerText = "$" + totalGeneral;
+}
+
+vaciarCarrito.addEventListener("click", () => {
+    carrito.length = 0;
+    actualizarCarrito();
+});
